@@ -19,8 +19,8 @@ Once the containers are all up and running, we can enter into **Kibana** using a
 
 The first thing to do to deploy the pipeline to a Kubernete cluster, is to be sure all the **images** are built and updated. We can easily do that in a single command using the docker-compose file:
 ```bash
-docker-compose build```
-
+docker-compose build
+```
 Once the images are ready, and a **Kubernetes Cluster** is online (es. using [**Minikube**](https://minikube.sigs.k8s.io/docs/) or the Docker Desktop Kubernetes cluster), we can deploy all the containers into **K8s pods** using kubectl:
 ```bash
 kubectl apply -f kubernetes
@@ -30,6 +30,6 @@ The command will apply to the cluster all the services and deployments descripte
 To actually access **Kibana**, we need to tell Kubernetes to forward its **port** to our host system. We can do that using kubectl.
 
 ```bash
-kubectl port-forward kibana-pod-name 5601```
-
+kubectl port-forward kibana-pod-name 5601
+```
 Once all is running, we can finally access our data with Kibana in our browser at the link [localhost:5601](localhost:5601)
