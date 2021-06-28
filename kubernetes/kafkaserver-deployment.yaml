@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: kafkaserver
+  name: kafkaserver
+spec:
+  selector:
+    matchLabels:
+      k8.service: kafkaserver
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: kafkaserver
+    spec:
+      containers:
+      - env:
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: PLAINTEXT://kafkaserver:9092
+        - name: KAFKA_BROKER_ID
+          value: "0"
+        - name: KAFKA_DEFAULT_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_OPTS
+          value: -javaagent:/opt/jolokia-jvm-1.6.2-agent.jar=port=8779,host=kafkaserver
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: zookeeper:2181
+        image: kafka:emotedet
+        imagePullPolicy: IfNotPresent
+        name: kafkaserver
+        ports:
+        - containerPort: 9092
+        - containerPort: 9101
+        - containerPort: 8779
+        resources: {}
+      hostname: kafkaserver
+      restartPolicy: Always
+status: {}

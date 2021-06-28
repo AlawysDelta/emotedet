@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: zookeeper
+  name: zookeeper
+spec:
+  selector:
+    matchLabels:
+      k8.service: zookeeper
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: zookeeper
+    spec:
+      containers:
+      - env:
+        - name: ZOOKEEPER_CLIENT_PORT
+          value: "2181"
+        - name: ZOOKEEPER_SERVER_ID
+          value: "1"
+        image: confluentinc/cp-zookeeper:6.1.1
+        name: zookeeper
+        ports:
+        - containerPort: 2181
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: kibana
+  name: kibana
+spec:
+  selector:
+    matchLabels:
+      k8.service: kibana
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: kibana
+    spec:
+      containers:
+      - env:
+        - name: ELASTICSEARCH_HOSTS
+          value: '"http://elastic:9200"'
+        image: docker.elastic.co/kibana/kibana:7.12.1
+        name: kibana
+        ports:
+        - containerPort: 5601
+        resources: {}
+      restartPolicy: Always
+status: {}

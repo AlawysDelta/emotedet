@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: metricbeat
+  name: metricbeat
+spec:
+  selector:
+    matchLabels:
+      k8.service: metricbeat
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: metricbeat
+    spec:
+      containers:
+      - env:
+        - name: ELASTICSEARCH_HOSTS
+          value: elastic:9200
+        image: metricbeat:emotedet
+        imagePullPolicy: IfNotPresent
+        name: metricbeat
+        resources: {}
+        volumeMounts:
+        - mountPath: /usr/share/metricbeat/data
+          name: metricbeat
+        - mountPath: /var/run/docker.sock
+          name: metricbeat-hostpath1
+      restartPolicy: Always
+      volumes:
+      - hostPath:
+          path: /home/alawys/EmoteDet
+        name: metricbeat
+      - hostPath:
+          path: /home/alawys/EmoteDet/var/run/docker.sock
+        name: metricbeat-hostpath1
+status: {}

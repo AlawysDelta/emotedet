@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: elastic
+  name: elastic
+spec:
+  selector:
+    matchLabels:
+      k8.service: elastic
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: elastic
+    spec:
+      containers:
+      - env:
+        - name: ES_JAVA_OPTS
+          value: -Xms512m -Xmx512m
+        - name: cluster.name
+          value: es-docker-cluster
+        - name: discovery.seed_hosts
+          value: es
+        - name: discovery.type
+          value: single-node
+        - name: node.name
+          value: es
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+        name: elastic
+        ports:
+        - containerPort: 9200
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: spark
+  name: spark
+spec:
+  selector:
+    matchLabels:
+      k8.service: spark
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: spark
+    spec:
+      containers:
+      - image: spark:emotedet
+        imagePullPolicy: IfNotPresent
+        name: spark
+        ports:
+        - containerPort: 4040
+        resources: {}
+      restartPolicy: Always
+status: {}

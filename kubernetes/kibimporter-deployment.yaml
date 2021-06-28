@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: kibimporter
+  name: kibimporter
+spec:
+  selector:
+    matchLabels:
+      k8.service: kibimporter
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: kibimporter
+    spec:
+      containers:
+      - image: kibmporter:emotedet
+        imagePullPolicy: IfNotPresent
+        name: kibimporter
+        resources: {}
+      restartPolicy: Always
+status: {}

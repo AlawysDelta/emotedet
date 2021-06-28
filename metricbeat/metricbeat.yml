@@ -1,0 +1,59 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+output.elasticsearch:
+  hosts: 'http://elastic:9200'
+
+setup.kibana.host: "kibana:5601"
+metricbeat.modules:
+- module: docker
+  metricsets:
+    - "container"
+    - "cpu"
+    - "diskio"
+    - "event"
+    - "healthcheck"
+    - "info"
+    - "memory"
+    - "network"
+  hosts: ["unix:///var/run/docker.sock"]
+  period: 10s
+  enabled: true
+
+# Kafka metrics collected using the Kafka protocol
+- module: kafka
+  metricsets:
+    - partition
+    - consumergroup
+  period: 10s
+  hosts: ["kafkaserver:9092"]
+
+# Metrics collected from a Kafka broker using Jolokia
+- module: kafka
+  metricsets:
+    - broker
+  period: 10s
+  hosts: ["kafkaserver:8779"]
+
+- module: logstash
+  period: 10s
+  hosts: ["logstash:9600"]
+  xpack.enabled: true
+
+
+- module: kibana
+  period: 10s
+  hosts: ["kibana:5601"]
+  enabled: true
+  xpack.enabled: true
+
+- module: elasticsearch
+  period: 10s
+  hosts: ["elastic:9200"]
+  xpack.enabled: true
+

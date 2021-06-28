@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: logstash
+  name: logstash
+spec:
+  selector:
+    matchLabels:
+      k8.service: logstash
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: logstash
+    spec:
+      containers:
+      - image: logstash:emotedet
+        imagePullPolicy: IfNotPresent
+        name: logstash
+        ports:
+        - containerPort: 9600
+        resources: {}
+        volumeMounts:
+        - mountPath: /opt/tracks
+          name: tracks
+
+      - env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: ARTIST
+          value : Bastille 
+        image: crawler:emotedet
+        imagePullPolicy: IfNotPresent
+        name: crawler
+        resources: {}
+        volumeMounts:
+        - mountPath: /opt/tracks
+          name: tracks
+      restartPolicy: Always
+      volumes:
+      - name: tracks
+        emptyDir: {}
+status: {}

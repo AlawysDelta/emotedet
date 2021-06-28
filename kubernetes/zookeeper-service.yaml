@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: zookeeper
+  name: zookeeper
+spec:
+  ports:
+  - name: "2181"
+    port: 2181
+    targetPort: 2181
+  selector:
+    k8.service: zookeeper
+status:
+  loadBalancer: {}

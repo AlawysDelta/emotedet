@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    k8.service: kafkatopic
+  name: kafkatopic
+spec:
+  selector:
+    matchLabels:
+      k8.service: kafkatopic
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8.service: kafkatopic
+    spec:
+      containers:
+      - args:
+        - bash
+        - -c
+        - kafka-topics --create --bootstrap-server kafkaserver:9092 --replication-factor
+          1 --partitions 1 --topic emotedet
+        image: confluentinc/cp-kafka:6.1.1
+        name: kafkatopic
+        resources: {}
+      restartPolicy: Always
+status: {}

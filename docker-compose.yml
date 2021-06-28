@@ -1,0 +1,164 @@
+version: "3"
+services:
+    logstash:
+        build: logstash
+        container_name: "logstash"
+        image: "logstash:emotedet"
+        depends_on:
+            - "crawler"
+            - "kafkaserver"
+        ports:
+            - "9600:9600"
+        volumes:
+            - "tracks:/opt/tracks"
+        networks:
+            - "emotedet"
+
+    # Crawler container
+    crawler:
+        build: "geniusCrawler"
+        image: "crawler:emotedet"
+        container_name: "crawler"
+        depends_on:
+            - "kafkaserver"
+        volumes: 
+            - "tracks:/opt/tracks"
+        environment:
+            - "PYTHONUNBUFFERED=1"
+            - "ARTIST"
+    
+    # Zookeeper for Kafka
+    zookeeper:
+        image: "confluentinc/cp-zookeeper:6.1.1"
+        container_name: "zookeeper"
+        ports:
+            - "2181:2181"
+        environment:
+            ZOOKEEPER_CLIENT_PORT: "2181"
+            ZOOKEEPER_SERVER_ID: "1"
+        networks:
+            - "emotedet"
+
+
+    # Kafka Broker
+    kafkaserver:
+        build: "kafka"
+        image: "kafka:emotedet"
+        container_name: "kafkaserver"
+        hostname: "kafkaServer"
+        depends_on:
+            - "zookeeper"
+        ports:
+            - "9092:9092"
+            - "9101:9101"
+            - "8779:8779"
+        environment:
+            KAFKA_BROKER_ID: 0
+            KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+            KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafkaserver:9092"
+            KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+            KAFKA_OPTS: "-javaagent:/opt/jolokia-jvm-1.6.2-agent.jar=port=8779,host=kafkaserver"
+        networks:
+            - "emotedet"
+
+
+    # Container to create Kafka topic
+    kafkatopic:
+        image: "confluentinc/cp-kafka:6.1.1"
+        container_name: "kafkatopic"
+        depends_on:
+            - "kafkaserver"
+        command: bash -c "kafka-topics --create --bootstrap-server kafkaserver:9092 --replication-factor 1 --partitions 1 --topic emotedet"
+        networks:
+            - "emotedet"
+
+    # Kafka webui
+    webui:
+        image: "provectuslabs/kafka-ui:latest"
+        container_name: "kafkaWebUI"
+        environment:
+            KAFKA_CLUSTERS_0_NAME: "my_cluster"
+            KAFKA_CLUSTERS_0_ZOOKEEPER: "zookeeper:2181"
+            KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafkaServer:9092"
+        ports:
+            - "8080:8080"
+        depends_on:
+            - "kafkaserver"
+        networks:
+            - "emotedet"
+
+
+    # Spark container
+    spark:
+        build: "spark"
+        image: "spark:emotedet"
+        ports:
+            - "4040:4040"
+        container_name: "spark"
+        depends_on:
+            - "kafkaserver"
+            - "kibana"
+        networks:
+            - "emotedet"
+
+    # ES container
+    elastic:
+        image: "docker.elastic.co/elasticsearch/elasticsearch:7.13.2"
+        container_name: "elastic"
+        environment:
+            - "node.name=es"
+            - "cluster.name=es-docker-cluster"
+            - "discovery.seed_hosts=es"
+            - "discovery.type=single-node"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+            - "9200:9200"
+        networks:
+            - "emotedet"
+
+    # Kibana container
+    kibana:
+        image: "docker.elastic.co/kibana/kibana:7.12.1"
+        container_name: "kibana"
+        ports:
+            - "5601:5601"
+        depends_on:
+            - "elastic"
+        networks:
+            - "emotedet"
+        environment:
+            - ELASTICSEARCH_HOSTS="http://elastic:9200"
+
+
+    # Metricbeat container
+    metricbeat:
+        build: "metricbeat"
+        image: "metricbeat:emotedet"
+        container_name: "metricbeat"
+        restart: "always"
+        environment:
+            ELASTICSEARCH_HOSTS: "elastic:9200"
+        volumes:
+            - "metricbeat:/usr/share/metricbeat/data"
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        networks:
+            - "emotedet"
+
+    # Container to import Kibana dashboards and indexes via REST Api
+    kibImporter:
+        build: "kibImporter"
+        image: "kibmporter:emotedet"
+        container_name: "kibImporter"
+        depends_on:
+            - "kibana"
+        networks:
+            - "emotedet"
+
+volumes:
+    tracks:
+    metricbeat:
+
+networks:
+    emotedet:
