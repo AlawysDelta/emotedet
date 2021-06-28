@@ -32,3 +32,6 @@ To actually access **Kibana**, we need to tell Kubernetes to forward its **port*
 kubectl port-forward kibana-pod-name 5601
 ```
 Once all is running, we can finally access our data with Kibana in our browser at the link [localhost:5601](localhost:5601)
+
+# Learn More
+Read the included Jupyter Notebook to know more about the project.
