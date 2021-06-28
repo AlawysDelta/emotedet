@@ -2,7 +2,7 @@
 Implementation of a **Data Pipeline** to analyze the discography from an **Artist**, using Machine Learning to detect the **emotions** associated to the lyrics of their tracks, and then gathering and visualizing the data to have a general idea of the emotions conveyed by the artist in their music, adding new music in **real time** when released.
 
 
-# Add Spark Setup
+# Add the Apache Spark Setup
 The project needs to find a tar archive for Apache Spark in the folder spark/setup. The project is configured to work with Apache Spark 3.1.2 built for Apache Hadoop 2.7, downloadable [here](https://www.apache.org/dyn/closer.lua/spark/spark-3.1.2/spark-3.1.2-bin-hadoop2.7.tgz). If you want to use a different Spark version, edit the Dockerfile into the spark folder accordingly.
 
 # Deploying with Docker-Compose
