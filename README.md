@@ -10,10 +10,10 @@ The project needs to find a tar archive for Apache Spark in the folder spark/set
 Having Docker installed, deploying the pipeline will be pretty easy: we will need just a command:
 
 ```bash
-docker-compose up --build -d
+ARTIST="Your artist" docker-compose up --build -d
 ```
 
-Let's see what this does: ```docker-compose up``` will say to docker to run all the containers defined in the docker-compose file with all the options indicated, ```--build``` will actually build all the images needed for the various containers, and ```-d``` will tell the CLI to not log all the containers in the current terminal
+Let's see what this does: ```docker-compose up``` will say to docker to run all the containers defined in the docker-compose file with all the options indicated, ```--build``` will actually build all the images needed for the various containers, and ```-d``` will tell the CLI to not log all the containers in the current terminal. The environmental variable ARTIST will indicate to the pipeline the artist to analyze.
 
 Once the containers are all up and running, we can enter into **Kibana** using a browser with the url [kibana:5601](http://kibana:5601), and start playing with our data!
 
@@ -24,6 +24,8 @@ The first thing to do to deploy the pipeline to a Kubernete cluster, is to be su
 ```bash
 docker-compose build
 ```
+
+To choose which artist to analyze, you need to edit the ```crawler-deployment.yaml``` file, and change the ARTIST container env variable accordingly.
 Once the images are ready, and a **Kubernetes Cluster** is online (es. using [**Minikube**](https://minikube.sigs.k8s.io/docs/) or the Docker Desktop Kubernetes cluster), we can deploy all the containers into **K8s pods** using kubectl:
 ```bash
 kubectl apply -f kubernetes
