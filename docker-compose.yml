@@ -113,6 +113,7 @@ services:
             - "discovery.seed_hosts=es"
             - "discovery.type=single-node"
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - "xpack.monitoring.collection.enabled=true"
         ports:
             - "9200:9200"
         networks:

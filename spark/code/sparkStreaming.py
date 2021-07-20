@@ -47,7 +47,7 @@ trainingSet = trainingSet.na.drop(subset="lyrics")
 #creating StopWord list, using the default one and appending song-related stopwords
 removerToGetList = StopWordsRemover(inputCol="words", outputCol="wordsSanitized")
 stopWordList = removerToGetList.getStopWords()
-stopWordList.extend(['verse', 'refrain', 'intro', 'outro', 'bridge', 'chorus', '1', '2', '3', 're','pre', 'oh', 'll', 'solo', 've', 'yeah', 'm'])
+stopWordList.extend(['verse', 'refrain', 'intro', 'outro', 'bridge', 'chorus', '1', '2', '3', 're','pre', 'oh', 'll', 'solo', 've', 'yeah', 'm', 'urlcopyembedcopy'])
 
 
 #tokenizing the lyrics field into single words
