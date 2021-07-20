@@ -25,6 +25,12 @@ The first thing to do to deploy the pipeline to a Kubernete cluster, is to be su
 docker-compose build
 ```
 
+If you're using Minikube, you need to change your local docker-env to the minikube one **BEFORE** building your images, or they will be unreachable by Kubernetes. To do that, the command is 
+
+```bash
+eval $(minikube docker-env)
+```
+
 To choose which artist to analyze, you need to edit the ```crawler-deployment.yaml``` file, and change the ARTIST container env variable accordingly.
 Once the images are ready, and a **Kubernetes Cluster** is online (es. using [**Minikube**](https://minikube.sigs.k8s.io/docs/) or the Docker Desktop Kubernetes cluster), we can deploy all the containers into **K8s pods** using kubectl:
 ```bash
