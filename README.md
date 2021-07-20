@@ -13,7 +13,7 @@ Having Docker installed, deploying the pipeline will be pretty easy: we will nee
 ARTIST="Your artist" docker-compose up --build -d
 ```
 
-Let's see what this does: ```docker-compose up``` will say to docker to run all the containers defined in the docker-compose file with all the options indicated, ```--build``` will actually build all the images needed for the various containers, and ```-d``` will tell the CLI to not log all the containers in the current terminal. The environmental variable ARTIST will indicate to the pipeline the artist to analyze.
+Let's see what this does: ```docker-compose up``` will say to docker to run all the containers defined in the docker-compose file with all the options indicated, ```--build``` will actually build all the images needed for the various containers, and ```-d``` will tell the CLI to not log all the containers in the current terminal. The environmental variable ```ARTIST``` will indicate to the pipeline the artist to analyze.
 
 Once the containers are all up and running, we can enter into **Kibana** using a browser with the url [kibana:5601](http://kibana:5601), and start playing with our data!
 
