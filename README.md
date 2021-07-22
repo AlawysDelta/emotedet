@@ -13,7 +13,7 @@ Having Docker installed, deploying the pipeline will be pretty easy: we will nee
 ARTIST="Your artist" docker-compose up --build -d
 ```
 
-Let's see what this does: ```docker-compose up``` will say to docker to run all the containers defined in the docker-compose file with all the options indicated, ```--build``` will actually build all the images needed for the various containers, and ```-d``` will tell the CLI to not log all the containers in the current terminal. The environmental variable ARTIST will indicate to the pipeline the artist to analyze.
+Let's see what this does: ```docker-compose up``` will say to docker to run all the containers defined in the docker-compose file with all the options indicated, ```--build``` will actually build all the images needed for the various containers, and ```-d``` will tell the CLI to not log all the containers in the current terminal. The environmental variable ```ARTIST``` will indicate to the pipeline the artist to analyze.
 
 Once the containers are all up and running, we can enter into **Kibana** using a browser with the url [kibana:5601](http://kibana:5601), and start playing with our data!
 
@@ -23,6 +23,12 @@ Once the containers are all up and running, we can enter into **Kibana** using a
 The first thing to do to deploy the pipeline to a Kubernete cluster, is to be sure all the **images** are built and updated. We can easily do that in a single command using the docker-compose file:
 ```bash
 docker-compose build
+```
+
+If you're using Minikube, you need to change your local docker-env to the minikube one **BEFORE** building your images, or they will be unreachable by Kubernetes. To do that, the command is 
+
+```bash
+eval $(minikube docker-env)
 ```
 
 To choose which artist to analyze, you need to edit the ```crawler-deployment.yaml``` file, and change the ARTIST container env variable accordingly.
