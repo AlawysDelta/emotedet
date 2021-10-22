@@ -4,11 +4,11 @@ import string
 
 
 # API tokens and keys for the Genius and Spotify APIs
-token = "KuoqBlgcWX77V_hckwPnfMHi0PESMREOfS_5-WKFKTVXYyr0-PycVaPfkT6rfV2N"
+token = "INSERT YOUR GENIUS TOKEN HERE"
 
-spclientId = "6fcc5988e78340049c9f85e7cb7731be"
+spclientId = "INSERT YOUR SPOTIFY CLIENT ID HERE"
 
-spSecret = "91361bad19aa4509a76a04670f0c8420"
+spSecret = "INSERT YOUR SPOTIFY SECRET HERE"
 
 
 # Getting authorization for Spotify APIs
